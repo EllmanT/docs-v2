@@ -27,6 +27,7 @@ export async function getTemporaryAccessToken(){
         resourceType:"company",
         lookup:{id:user.id},
     });
+    console.log("response token", resp.data.token)
     console.log(`Token response received:`, resp.data?"Token received": " No token in the response");
 
     return resp.data?.token;
