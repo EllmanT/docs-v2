@@ -8,7 +8,7 @@ export const generateUploadUrl = mutation({
     }
 })
 
-// Storing the receipt file and add it to the database
+// Storing the doc file and add it to the database
 
 export const storeDoc = mutation({
     args:{
@@ -42,15 +42,15 @@ export const storeDoc = mutation({
     }
 })
 
-// Get all of the receipts
+// Get all of the docs
 
-export const getDoc = query({
+export const getDocs = query({
     args:{
         userId:v.string(),
     },
     handler: async(ctx, args)=>{
-        // Get the receipts
-    //   Only return the receipts for the authenticated user
+        // Get the docs
+    //   Only return the docs for the authenticated user
     return await ctx.db
     .query("docs")
     .filter((q)=>q.eq(q.field("userId"), args.userId))
@@ -59,7 +59,7 @@ export const getDoc = query({
     }
 })
 
-// Get receipt by id
+// Get doc by id
 
 export const getDocById = query({
     args:{
@@ -124,7 +124,7 @@ export const updateDocStatus = mutation({
         const userId = identity.subject;
 
         if(receipt.userId !==userId){
-            throw new Error("Not authorizzed to update the receipt")
+            throw new Error("Not authorized to update the receipt")
         }
         await ctx.db.patch(args.id,{
             status:args.status,

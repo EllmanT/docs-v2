@@ -13,7 +13,7 @@ function ReceiptList() {
 
     const {user} = useUser();
     
-    const receipts = useQuery(api.receipts.getReceipts,{
+    const receipts = useQuery(api.docs.getDocs,{
         userId:user?.id|| "",
     })
 

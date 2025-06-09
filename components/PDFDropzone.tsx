@@ -11,6 +11,7 @@ import { useSchematicEntitlement } from '@schematichq/schematic-react';
 // import { uploadPDF } from '@/actions/uploadPDF';
 import { AlertCircle, CheckCircle, CloudUpload } from 'lucide-react';
 import { Button } from './ui/button';
+import { uploadPDF } from '@/lib/actions/doc.action';
 
 function PDFDropzone() {
 
@@ -23,6 +24,7 @@ function PDFDropzone() {
     const router = useRouter();
 
     const {user } = useUser();
+    console.log("user", user)
 
     const {value:isFeatureEnabled, featureUsageExceeded, featureAllocation} = useSchematicEntitlement("scans")
 
@@ -31,7 +33,8 @@ console.log(featureUsageExceeded)
 console.log(featureAllocation)
 
 const handleUpload = useCallback (async(files:FileList| File[])=>{
-    console.log(files)
+    console.log("files",files)
+    console.log("user",user)
     if(!user){
         alert("Please sign in to upload file")
 
@@ -60,11 +63,11 @@ const handleUpload = useCallback (async(files:FileList| File[])=>{
 
             // Call the server action to handle the upload
 
-            // const result = await uploadPDF(formData);
-         let result
-            // if( result &&!result.success){
-            //     throw new Error(result.error);
-            // }
+            const result = await uploadPDF(formData);
+        //  let result
+            if( result &&!result.success){
+                throw new Error(result.error);
+            }
             newUploadedFiles.push(file.name)
         }
         setUploadFiles((prev)=>[...prev, ...newUploadedFiles])

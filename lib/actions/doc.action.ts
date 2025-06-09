@@ -2,12 +2,12 @@
 "use server"
 
 import { api } from "@/convex/_generated/api";
-import convex from "@/lib/convexClient";
 import { currentUser } from "@clerk/nextjs/server"
 import { v } from "convex/values";
-import { getFileDownloadUrl } from "./getFileDownloadUrl";
 import { inngest } from "@/inngest/client";
 import Events from "@/inngest/constants";
+import { getFileDownloadUrl } from "./getFileDownloadUrl";
+import convex from "../convexClient";
 
 export async function uploadPDF(formData:FormData){
     const user = await currentUser();
@@ -38,7 +38,7 @@ export async function uploadPDF(formData:FormData){
 
         }
           // Get the upload url from convex
-          const uploadUrl = await convex.mutation(api.receipts.generateUploadUrl,{})
+          const uploadUrl = await convex.mutation(api.docs.generateUploadUrl,{})
           // Conver the file to an array buffer for fetch api
           const arrayBuffer = await file.arrayBuffer();
           
@@ -60,7 +60,7 @@ export async function uploadPDF(formData:FormData){
               const {storageId} = await uploadResponse.json();
 
               // Add receipt to the database
-              const receiptId = await convex.mutation(api.receipts.storeReceipt,{
+              const receiptId = await convex.mutation(api.docs.storeDoc,{
                   userId:user.id,
                   fileId:storageId,
                   fileName:file.name,
@@ -72,13 +72,13 @@ export async function uploadPDF(formData:FormData){
               const fileUrl = await getFileDownloadUrl(storageId)
 
             //  Triggering inngest agent flow
-            await inngest.send({
-                name:Events.EXTRACT_DATA_AND_SAVE_TO_DB,
-                data:{
-                    url:fileUrl.downloadUrl,
-                    receiptId
-                }
-            })
+            // await inngest.send({
+            //     name:Events.EXTRACT_DATA_AND_SAVE_TO_DB,
+            //     data:{
+            //         url:fileUrl.downloadUrl,
+            //         receiptId
+            //     }
+            // })
             
             return {
                 success:true,
