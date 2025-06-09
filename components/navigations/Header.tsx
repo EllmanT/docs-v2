@@ -19,7 +19,7 @@ function Header() {
         </Link>
         <div className='flex items-center space-x-4'>
             <SignedIn>
-                <Link href="/receipts">
+                <Link href="/docs">
                     <Button variant="outline">My Docs</Button>
                 </Link>
                 <Link href="/manage-plan">
