@@ -1,0 +1,33 @@
+ {
+                                            doc.taxPayerName&& (
+                                                <div>
+                                                    <p className="text-sm text-gray-500">Tax Payer Name</p>
+                                                    <p className="font-medium">{doc.taxPayerName}</p>
+                                                </div>
+                                            )
+                                        }
+                                          {
+                                            doc.tradeName && (
+                                                <div>
+                                                    <p className="text-sm text-gray-500">Trade Name</p>
+                                                    <p className="font-medium">{doc.tradeName}</p>
+                                                </div>
+                                            )
+                                        }
+
+                                          {
+                                            doc.tinNumber && (
+                                                <div>
+                                                    <p className="text-sm text-gray-500">TIN Number</p>
+                                                    <p className="font-medium">{doc.tinNumber}</p>
+                                                </div>
+                                            )
+                                        }
+                                          {
+                                            doc.vatNumber && (
+                                                <div>
+                                                    <p className="text-sm text-gray-500">VAT Number</p>
+                                                    <p className="font-medium">{doc.vatNumber}</p>
+                                                </div>
+                                            )
+                                        }

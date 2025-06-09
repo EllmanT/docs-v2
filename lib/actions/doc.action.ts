@@ -3,11 +3,11 @@
 
 import { api } from "@/convex/_generated/api";
 import { currentUser } from "@clerk/nextjs/server"
-import { v } from "convex/values";
 import { inngest } from "@/inngest/client";
-import Events from "@/inngest/constants";
 import { getFileDownloadUrl } from "./getFileDownloadUrl";
 import convex from "../convexClient";
+import Events from "@/constants/constants";
+import { Id } from "@/convex/_generated/dataModel";
 
 export async function uploadPDF(formData:FormData){
     const user = await currentUser();
@@ -72,13 +72,13 @@ export async function uploadPDF(formData:FormData){
               const fileUrl = await getFileDownloadUrl(storageId)
 
             //  Triggering inngest agent flow
-            // await inngest.send({
-            //     name:Events.EXTRACT_DATA_AND_SAVE_TO_DB,
-            //     data:{
-            //         url:fileUrl.downloadUrl,
-            //         docId
-            //     }
-            // })
+            await inngest.send({
+                name:Events.EXTRACT_DATA_AND_SAVE_TO_DB,
+                data:{
+                    url:fileUrl.downloadUrl,
+                    docId
+                }
+            })
             
             return {
                 success:true,
@@ -96,4 +96,22 @@ export async function uploadPDF(formData:FormData){
             error: error instanceof Error ? error.message:"Unknown error"
         }
     }
+}
+
+export async function deleteDoc(docId:string){
+
+     try {
+        await convex.mutation(api.docs.deleteDoc,{
+            id:docId as Id<"docs">
+
+        })
+            return {success:true}     
+     } catch (error) {
+        console.log("Error deleting the doc", error);
+        return {
+            success:false,
+            error:error instanceof Error ? error.message:"An unknown error occured"
+        }
+     }
+
 }
