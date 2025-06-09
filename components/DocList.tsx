@@ -64,8 +64,8 @@ function DocList() {
                         </TableHead>
                         <TableHead>Name</TableHead>
                         <TableHead>Uploaded</TableHead>
-                        <TableHead>Size</TableHead>
-                        <TableHead>Total</TableHead>
+                        {/* <TableHead>Size</TableHead> */}
+                        {/* <TableHead>Total</TableHead> */}
                         <TableHead>Status</TableHead>
                         <TableHead className='w-[40px]'></TableHead>
                     </TableRow>
@@ -86,12 +86,12 @@ function DocList() {
                                 <TableCell>
                                     {new Date(doc.uploadedAt).toLocaleString()}
                                 </TableCell>
-                                <TableCell>
+                                {/* <TableCell>
                                     {formatFileSize(doc.size)}
-                                </TableCell>
-                                <TableCell>
+                                </TableCell> */}
+                                {/* <TableCell> */}
                                     {/* {doc.taxPayerName ? `${doc.transactionAmount} ${doc.currency ||""}`:"-"} */}
-                                </TableCell>
+                                {/* </TableCell> */}
                                 <TableCell>
                                     <span className={`px-2 py-1 rounded-full text-xs ${
                                         doc.status ==="pending"
