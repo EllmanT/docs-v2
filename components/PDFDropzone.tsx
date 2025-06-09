@@ -75,6 +75,8 @@ const handleUpload = useCallback (async(files:FileList| File[])=>{
         setTimeout(()=>(
             setUploadFiles([])
         ),5000)
+
+        router.push("/docs")
     } catch (error) {
         console.log("Upload failed", error);
         alert(`Upload of the document failed ${error instanceof Error ? error.message:"unknown error"}`)

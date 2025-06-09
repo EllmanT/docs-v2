@@ -1,5 +1,5 @@
+import DocList from '@/components/DocList'
 import PDFDropzone from '@/components/PDFDropzone'
-import ReceiptList from '@/components/DocList'
 import React from 'react'
 
 function Page() {
@@ -10,7 +10,7 @@ function Page() {
         <div className='grid grid-cols-1 lg:grid-cols-2 gap-10'>
             <PDFDropzone/>
 
-            {/* <ReceiptList/> */}
+            <DocList/>
         </div>
     </div>
   )

@@ -20,7 +20,7 @@ export default function Home() {
             </p>
           </div>
           <div className="space-x-4">
-            <Link href="/receipts">
+            <Link href="/docs">
               <Button className="bg-blue-500 hover:bg-blue-700">Get Started <ArrowRight className="ml-2 h-4 w-4"/></Button>
             </Link>
             <Link href="#features">

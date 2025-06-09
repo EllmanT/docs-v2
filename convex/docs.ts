@@ -66,10 +66,10 @@ export const getDocById = query({
         id:v.id("docs"),
     },
     handler: async(ctx, args)=>{
-        // Get the receipts
+        // Get the docs
     const doc = await ctx.db.get(args.id);
 
-    // Verifyuser has access to the receipt
+    // Verifyuser has access to the docs
     if(doc){
         const identity = await ctx.auth.getUserIdentity()
         if(!identity){
@@ -78,7 +78,7 @@ export const getDocById = query({
         const userId = identity.subject;
 
         if(doc.userId !==userId){
-            throw new Error("Not authorized to access this receipt")
+            throw new Error("Not authorized to access this doc")
         }
 
         return doc;
@@ -100,7 +100,7 @@ export const getDocDownloadUrl = query({
     }
 })
 
-// Updating the status of the receipt 
+// Updating the status of the doc
 
 export const updateDocStatus = mutation({
     args:{
@@ -108,9 +108,9 @@ export const updateDocStatus = mutation({
         status:v.string(),
     },
     handler: async (ctx,args)=>{
-        // Verify the user has access to the receipt
-        const receipt = await ctx.db.get(args.id);
-        if(!receipt){
+        // Verify the user has access to the doc
+        const doc = await ctx.db.get(args.id);
+        if(!doc){
             throw new Error("Doc not found");
         }
         const identity = await ctx.auth.getUserIdentity();
@@ -123,8 +123,8 @@ export const updateDocStatus = mutation({
 
         const userId = identity.subject;
 
-        if(receipt.userId !==userId){
-            throw new Error("Not authorized to update the receipt")
+        if(doc.userId !==userId){
+            throw new Error("Not authorized to update the doc")
         }
         await ctx.db.patch(args.id,{
             status:args.status,
@@ -140,7 +140,7 @@ export const deleteDoc= mutation({
         id:v.id("docs")
     },
     handler: async(ctx, args)=>{
-          // Verify the user has access to the receipt
+          // Verify the user has access to the doc
           const doc = await ctx.db.get(args.id);
           if(!doc){
               throw new Error("Doc not found");
@@ -155,9 +155,9 @@ export const deleteDoc= mutation({
     }
 })
 
-// Update receipt with the extracted info
+// Update doc with the extracted info
 
-export const updateReceiptWithExtractedData = mutation({
+export const updateDocWithExtractedData = mutation({
     args:{
         id:v.id("docs"),
         fileDisplayName:v.string(),

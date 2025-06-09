@@ -1,13 +1,13 @@
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
-import convex from "@/lib/convexClient";
+import convex from "../convexClient";
 
 
 export async function getFileDownloadUrl(fileId:Id<"_storage">| string){
     try {
 
         // Get the download url from convex
-        const downloadUrl = await convex.query(api.receipts.getReceiptDownloadUrl,{
+        const downloadUrl = await convex.query(api.docs.getDocDownloadUrl,{
             fileId:fileId as Id<"_storage">
 
         })

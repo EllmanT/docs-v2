@@ -59,8 +59,8 @@ export async function uploadPDF(formData:FormData){
 
               const {storageId} = await uploadResponse.json();
 
-              // Add receipt to the database
-              const receiptId = await convex.mutation(api.docs.storeDoc,{
+              // Add doc to the database
+              const docId = await convex.mutation(api.docs.storeDoc,{
                   userId:user.id,
                   fileId:storageId,
                   fileName:file.name,
@@ -76,14 +76,14 @@ export async function uploadPDF(formData:FormData){
             //     name:Events.EXTRACT_DATA_AND_SAVE_TO_DB,
             //     data:{
             //         url:fileUrl.downloadUrl,
-            //         receiptId
+            //         docId
             //     }
             // })
             
             return {
                 success:true,
                 data:{
-                    receiptId,
+                    docId,
                     fileName:file.name
                 }
             }

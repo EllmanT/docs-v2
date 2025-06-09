@@ -8,29 +8,29 @@ import { Doc } from '@/convex/_generated/dataModel';
 import { useRouter } from 'next/navigation';
 import { ChevronRight, FileText } from 'lucide-react';
 
-function ReceiptList() {
+function DocList() {
     const router = useRouter();
 
     const {user} = useUser();
     
-    const receipts = useQuery(api.docs.getDocs,{
+    const docs = useQuery(api.docs.getDocs,{
         userId:user?.id|| "",
     })
 
     if(!user){
         return (
             <div className='w-full p-8 text-center'>
-                <p className='text-gray-600'>Please sign in to view your receipts</p>
+                <p className='text-gray-600'>Please sign in to view your docs</p>
 
 
             </div>
         )
     }
-    if(!receipts){
+    if(!docs){
         return (
             <div className='w-full p-8 text-center'>
                 <div className='animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500 mx-auto'></div>
-                <p className='text-gray-600 mt-2'>Loading receipts</p>
+                <p className='text-gray-600 mt-2'>Loading docs</p>
 
                 
 
@@ -39,10 +39,10 @@ function ReceiptList() {
         )
     }
 
-    if(receipts.length ===0){
+    if(docs.length ===0){
         return (
             <div className='w-full p-8 text-center border border-gray-200 rounded-lg bg-gray-50'>
-                <p className='text-gray-600'>No receipts have been uploaded yet</p>
+                <p className='text-gray-600'>No Docs have been uploaded yet</p>
 
 
 
@@ -54,7 +54,7 @@ function ReceiptList() {
   return (
     <div className='w-full'>
 
-        <h2 className='text-xl font-smibold mb-4'>Your Receipts</h2>
+        <h2 className='text-xl font-smibold mb-4'>Your Docs</h2>
         <div className='bg-white border border-gray-200 rounded-lg overflow-hidden'>
             <Table>
                 <TableHeader>
@@ -71,33 +71,33 @@ function ReceiptList() {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {receipts.map((receipt: Doc<"receipts">)=>(
+                    {docs.map((doc: Doc<"docs">)=>(
                         <TableRow
-                        key={receipt._id}
+                        key={doc._id}
                         className='cursor-pointer hover:bg-gray-50'
-                        onClick={()=>(router.push(`/receipt/${receipt._id}`))}
+                        onClick={()=>(router.push(`/doc/${doc._id}`))}
                         >
                             <TableCell className='py-2'>
                                 <FileText className='h-5 w-5 text-red-500'/>
                             </TableCell>
                                 <TableCell className='font-medium'>
-                                    {receipt.fileDisplayName || receipt.fileName}
+                                    {doc.fileDisplayName || doc.fileName}
                                 </TableCell>
                                 <TableCell>
-                                    {new Date(receipt.uploadedAt).toLocaleString()}
+                                    {new Date(doc.uploadedAt).toLocaleString()}
                                 </TableCell>
                                 <TableCell>
-                                    {formatFileSize(receipt.size)}
+                                    {formatFileSize(doc.size)}
                                 </TableCell>
                                 <TableCell>
-                                    {receipt.transactionAmount ? `${receipt.transactionAmount} ${receipt.currency ||""}`:"-"}
+                                    {/* {doc.taxPayerName ? `${doc.transactionAmount} ${doc.currency ||""}`:"-"} */}
                                 </TableCell>
                                 <TableCell>
                                     <span className={`px-2 py-1 rounded-full text-xs ${
-                                        receipt.status ==="pending"
-                                        ?"bg-yellow-100 text-yello-800": receipt.status ==="processed"? "bg-green-100 text-green-800":"bg-red-100 text-red-800"
+                                        doc.status ==="pending"
+                                        ?"bg-yellow-100 text-yello-800": doc.status ==="processed"? "bg-green-100 text-green-800":"bg-red-100 text-red-800"
                                     }`}>
-                                            {receipt.status.charAt(0).toUpperCase()+ receipt.status.slice(1)}
+                                            {doc.status.charAt(0).toUpperCase()+ doc.status.slice(1)}
                                     </span>
                                 </TableCell>
                                 <TableCell className='text-right'>
@@ -112,7 +112,7 @@ function ReceiptList() {
   )
 }
 
-export default ReceiptList
+export default DocList
 
 // Helper for the formatting of the size
 
