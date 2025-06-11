@@ -6,7 +6,7 @@ import { Id } from "@/convex/_generated/dataModel";
 import { api } from "@/convex/_generated/api";
 import convex from "@/lib/convexClient";
 
-const parsePDFTool = createTool({
+export const parsePDFTool = createTool({
   name: "parse-pdf",
   description: "Analyse the given PDF",
   parameters: z.object({

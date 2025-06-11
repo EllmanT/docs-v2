@@ -63,11 +63,17 @@ const handleUpload = useCallback (async(files:FileList| File[])=>{
 
             // Call the server action to handle the upload
 
-            const result = await uploadPDF(formData);
+            // const result = await uploadPDF(formData);
+            const result =  await fetch("/api/doc-processing", {
+    method: "POST",
+    body: formData,
+    // credentials: "include", // Needed if you're using Clerk and want to pass session cookie
+  });
+  console.log(result)
         //  let result
-            if( result &&!result.success){
-                throw new Error(result.error);
-            }
+            // if( result &&!result.success){
+            //     throw new Error(result.error);
+            // }
             newUploadedFiles.push(file.name)
         }
         setUploadFiles((prev)=>[...prev, ...newUploadedFiles])
