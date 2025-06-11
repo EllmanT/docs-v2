@@ -36,7 +36,7 @@ export async function POST(req: Request) {
 
   try {
     const formData = await req.formData();
-    const file = formData.get("file") as File;
+    const file = formData.get("tax_certificate") as File;
 
     if (!file) {
       return NextResponse.json(
