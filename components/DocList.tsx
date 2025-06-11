@@ -64,8 +64,6 @@ function DocList() {
                         </TableHead>
                         <TableHead>Name</TableHead>
                         <TableHead>Uploaded</TableHead>
-                        {/* <TableHead>Size</TableHead> */}
-                        {/* <TableHead>Total</TableHead> */}
                         <TableHead>Status</TableHead>
                         <TableHead className='w-[40px]'></TableHead>
                     </TableRow>
@@ -81,17 +79,11 @@ function DocList() {
                                 <FileText className='h-5 w-5 text-red-500'/>
                             </TableCell>
                                 <TableCell className='font-medium'>
-                                    {doc.fileDisplayName || doc.fileName}
+                                    {doc.taxPayerName ? doc.taxPayerName : doc.fileName}
                                 </TableCell>
                                 <TableCell>
                                     {new Date(doc.uploadedAt).toLocaleString()}
                                 </TableCell>
-                                {/* <TableCell>
-                                    {formatFileSize(doc.size)}
-                                </TableCell> */}
-                                {/* <TableCell> */}
-                                    {/* {doc.taxPayerName ? `${doc.transactionAmount} ${doc.currency ||""}`:"-"} */}
-                                {/* </TableCell> */}
                                 <TableCell>
                                     <span className={`px-2 py-1 rounded-full text-xs ${
                                         doc.status ==="pending"
@@ -114,14 +106,3 @@ function DocList() {
 
 export default DocList
 
-// Helper for the formatting of the size
-
-function formatFileSize(bytes:number):string{
-    if(bytes ===0) return "0 bytes";
-    const k =1024;
-
-    const size =["Bytes", "KB", "MB", "GB"];
-
-    const i = Math.floor(Math.log(bytes)/Math.log(k));
-    return parseFloat((bytes/Math.pow(k,i)).toFixed(2))+""+ size[i]
-}
