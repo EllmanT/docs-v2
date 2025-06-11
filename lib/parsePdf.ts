@@ -17,7 +17,14 @@ export async function parsePdf({ pdfUrl }: { pdfUrl: string }) {
              
           {
             type: 'text',
-            text: `Extract the data from the VAT certificate and return the structured output as follows:
+            text: `Extract the data from the VAT certificate 
+            Your job is to extract and structure the following:
+- Tax Payer Name: The name under 'Taxpayer Name' or 'Name of Registered Operator'
+- Trade Name: The name under 'Trade Name' or 'Trading as'
+- TIN Number: 10-digit starting with 200
+- VAT Number: 9-digit starting with 220
+You must detect OCR errors, handle different formats and languages, and return results in structured JSON
+            and return the structured output as follows:
 {
   "taxPayerName": "Tax Payer Name",
   "tradeName": "Trade Name",
@@ -52,8 +59,8 @@ export async function parsePdf({ pdfUrl }: { pdfUrl: string }) {
     const data = JSON.parse(jsonMatch[0]);
     
     return {
-      taxPayerName: data.taxPayerName,
-      tradeName: data.tradeName,
+      regOperator: data.taxPayerName,
+      regTradeName: data.tradeName,
       tinNumber: data.tinNumber,
       vatNumber: data.vatNumber,
     };

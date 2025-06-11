@@ -59,8 +59,8 @@ export async function POST(req: Request) {
 
    
 
-     const result = await parsePdf({pdfUrl:fileUrl.downloadUrl!});
-     console.log("rest results", result)
+     const data = await parsePdf({pdfUrl:fileUrl.downloadUrl!});
+     console.log("rest results", data)
 
       // Trigger Inngest event
     // const newData = await inngest.send({
@@ -81,10 +81,9 @@ export async function POST(req: Request) {
 // },context);
 
     return NextResponse.json({
-      success: true,
-      data: {
-       result
-      },
+      success: true, 
+        data
+      
     });
   } catch (error) {
     console.error("Upload error:", error);
