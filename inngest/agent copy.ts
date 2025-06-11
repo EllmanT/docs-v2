@@ -1,30 +1,40 @@
 import {
+    anthropic,
     createNetwork,
+    getDefaultRoutingAgent,
 } from "@inngest/agent-kit"
 import {createServer} from "@inngest/agent-kit/server"
 import { inngest } from "./client";
+import { databaseAgent } from "./agents/databaseAgent";
 import { docScanningAgent } from "./agents/docScanningAgent";
 import Events from "@/constants/constants";
-
+import { vatDocProcessingAgent } from "./agents/combinedAgent";
 
 const agentNetwork = createNetwork({
 
     name:"Agent Team",
-    agents:[ docScanningAgent],
-   
+    agents:[databaseAgent, docScanningAgent],
+    defaultModel: anthropic({
+        model: "claude-3-5-sonnet-latest",
+        defaultParameters:{
+            max_tokens:1000,
+        }
+    }),
     defaultRouter:({network})=>{
         const savedToDatabase = network.state.kv.get("save-to-database");
-         if(savedToDatabase !==undefined){
+
+        if(savedToDatabase !==undefined){
             // Terminate the agent process if the data has been saved to the database
 
             return undefined;
         }
-        return docScanningAgent;
+
+        return getDefaultRoutingAgent()
     }
 })
 
 export const server = createServer({
-    agents:[ docScanningAgent],
+    agents:[databaseAgent, docScanningAgent, vatDocProcessingAgent],
     networks:[agentNetwork]
 });
 

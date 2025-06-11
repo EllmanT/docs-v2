@@ -1,80 +1,156 @@
 import { createAgent, createTool, openai } from "@inngest/agent-kit";
 import { anthropic } from "inngest";
 import { z } from "zod";
+import { client } from "@/lib/schematic";
+import { Id } from "@/convex/_generated/dataModel";
+import { api } from "@/convex/_generated/api";
+import convex from "@/lib/convexClient";
 
 const parsePDFTool = createTool({
-    name:"parse-pdf",
-    description:"Analyse the given PDF",
-    parameters:z.object({
-        pdfUrl:z.string()
-    }),
+  name: "parse-pdf",
+  description: "Analyse the given PDF",
+  parameters: z.object({
+    pdfUrl: z.string(),
+    fileDisplayName: z
+      .string()
+ .describe(
+            "THe readable display name of the vat certificate document to show in the UI. If the file name is not human readale use this to give a more readable name"
+        ),
+            docId: z.string().describe("The ID of the VAT certificate document"),
+    taxPayerName: z.string().describe("Name under the heading 'Taxpayer Name' or 'Name of Registered Operator'"),
+    tradeName: z.string().describe("Name under the heading 'Trade Name'"),
+    tinNumber: z
+      .string()
+      .describe("TIN: 10-digit number starting with 200"),
+    vatNumber: z
+      .string()
+      .describe("VAT: 9-digit number starting with 220"),
+  }),
 
-    handler: async ({pdfUrl}, {step})=>{
-        try {
-            return await step?.ai.infer("parse-pdf",{
-                model:anthropic({
-                    model:"claude-3-5-sonnet-20241022",
-                    defaultParameters:{
-                        max_tokens:3094,
-                    }
-                }),
-                body:{
-                    messages:[
-                        {
-                            role:"user",
-                            content:[
-                                {
-                                    type:"document",
-                                    source:{
-                                        type:"url",
-                                        url:pdfUrl
-                                    }
-                                },
-                                {
-                                    type:"text",
-                                    text:`Extract the data from the vat certificate and return the structured output as follows:
-                                    {
-                                    "taxPayerName":" Tax Payer Name",
-                                    "tradeName":"Trade Name",
-                                    "tinNumber":"2000111222",
-                                    "vatNumber":"220123123",
-                                           
-                                    }
-                                    `
-                                }
-                            ]
-                        }
-                    ]
+  handler: async (params, context) => {
+    const { pdfUrl, fileDisplayName, docId } = params;
+    const { step } = context;
+
+    try {
+      const result1 = await step?.ai.infer("parse-pdf", {
+        model: anthropic({
+          model: "claude-3-5-sonnet-20241022",
+          defaultParameters: {
+            max_tokens: 3094,
+          },
+        }),
+        body: {
+          messages: [
+            {
+              role: "user",
+              content: [
+                {
+                  type: "document",
+                  source: {
+                    type: "url",
+                    url: pdfUrl,
+                  },
+                },
+                {
+                  type: "text",
+                  text: `Extract the data from the VAT certificate and return the structured output as follows:
+{
+  "taxPayerName": "Tax Payer Name",
+  "tradeName": "Trade Name",
+  "tinNumber": "2000111222",
+  "vatNumber": "220123123"
+}`,
+                },
+              ],
+            },
+          ],
+        },
+      });
+
+      const textBlock = result1?.content.find((block) => block.type === "text");
+
+      if (textBlock && "text" in textBlock) {
+        const rawText = textBlock.text;
+        const jsonMatch = rawText.match(/\{[\s\S]*\}/);
+
+        if (jsonMatch) {
+          try {
+            const data = JSON.parse(jsonMatch[0]);
+            const { taxPayerName, tradeName, tinNumber, vatNumber } = data;
+
+            console.log("Extracted:", taxPayerName, tradeName, tinNumber, vatNumber);
+
+            // Save to database
+            try {
+              const { userId } = await convex.mutation(
+                api.docs.updateDocWithExtractedData,
+                {
+                  id: docId as Id<"docs">,
+                  fileDisplayName,
+                  taxPayerName,
+                  tradeName,
+                  tinNumber,
+                  vatNumber,
                 }
-            })  
-        } catch (error) {
-            console.error(error);
-            throw error;
+              );
+
+              await client.track({
+                event: "scan",
+                company: { id: userId },
+                user: { id: userId },
+              });
+
+              // ✅ Mark agent as done
+              await context.network?.state.kv.set("save-to-database", true);
+
+             
+              return {
+                addedToDb: "Success",
+                docId,
+                fileDisplayName,
+                taxPayerName,
+                tradeName,
+                tinNumber,
+                vatNumber,
+              };
+            } catch (error) {
+              return {
+                addedToDb: "Failed",
+                error: error instanceof Error ? error.message : "Unknown error",
+              };
+            }
+          } catch (err) {
+            console.error("Error parsing JSON:", err);
+          }
+        } else {
+          console.error("No JSON found in the text.");
         }
-      
+      } else {
+        console.error("No text block found.");
+      }
+    } catch (error) {
+      console.error("AI parsing failed:", error);
+      throw error;
     }
-})
+  },
+});
 
 export const docScanningAgent = createAgent({
-    name:"Doc Scanning Agent",
-    description:
-    "Processes vat certificate PDFs to extract key information -  the trade name, tax payer name , TIN Number VAT number",
-    system:` You are an AI powered vat certificate scanning assistant. Your primary role is to accurately extract and structure
-    relevant information from scanned vat vertificate. Your task includes recognizing and parsing the following details
-    - Tax Payer Name: The name that is under the heading that says taxpayer name.
-    -Trade name: The name that is under the heading that says trade name.
-    - Tin Number: The number that is under the heading that says TIN . This is a 10 digit number . This number starts with 200.
-    - Vat Number: The number that is under the heading that says VAT . This is a 9 digit number . This number starts with 230.
-    - Ensure high accuracy by detecting OCR errors and correcting misread text when possible.
-    - If any key details are missing or unclear return a structured response indicating incomplete data.
-    - Handle multiple formats , languages and varying vat certificate document layouts efficiently.
-    -Maintain a structured JSON output for easy integration with databases or expense tracking systems
-    `,
-    model:openai({
-        model:"gpt-4o-mini",
-        defaultParameters:{
-            max_completion_tokens:3094,
-        }
-    }),
-    tools:[parsePDFTool]
-})
+  name: "Doc Scanning Agent",
+  description:
+    "Processes VAT certificate PDFs to extract key info: Trade name, Tax Payer Name, TIN Number, VAT Number",
+  system: `You are an AI-powered VAT certificate scanning assistant.
+Your job is to extract and structure the following:
+- Tax Payer Name: The name under 'Taxpayer Name'
+- Trade Name: The name under 'Trade Name'
+- TIN Number: 10-digit starting with 200
+- VAT Number: 9-digit starting with 220
+You must detect OCR errors, handle different formats and languages, and return results in structured JSON.`,
+  model: openai({
+    model: "gpt-4o-mini",
+    defaultParameters: {
+      max_completion_tokens: 3094,
+    },
+  }),
+  tools: [parsePDFTool],
+});

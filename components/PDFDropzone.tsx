@@ -74,7 +74,7 @@ const handleUpload = useCallback (async(files:FileList| File[])=>{
 
         setTimeout(()=>(
             setUploadFiles([])
-        ),5000)
+        ),2000)
 
         router.push("/docs")
     } catch (error) {

@@ -175,7 +175,7 @@ export const updateDocWithExtractedData = mutation({
         }
 
         // Update the doc with the extracted data
-        await ctx.db.patch(args.id,{
+       const updatedData = await ctx.db.patch(args.id,{
             fileDisplayName:args.fileDisplayName,
             taxPayerName:args.taxPayerName,
             tradeName:args.tradeName,
@@ -185,7 +185,8 @@ export const updateDocWithExtractedData = mutation({
             status:"processed"
         })
         return {
-            userId:doc.userId
+            userId:doc.userId,
+           data:updatedData
         }
     }
 })

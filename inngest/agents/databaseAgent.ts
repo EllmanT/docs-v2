@@ -5,7 +5,7 @@ import { client } from "@/lib/schematic";
 import { createAgent, createTool, openai } from "@inngest/agent-kit";
 
 import {z} from "zod"
-const saveToDatabase = createTool({
+export const saveToDatabase = createTool({
     name:"save-to-database",
     description:"Saves the given data to the convex database",
     parameters:z.object({
