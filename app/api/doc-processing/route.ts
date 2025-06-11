@@ -20,19 +20,19 @@ export async function OPTIONS() {
 }
 
 export async function POST(req: Request) {
-  const { userId } = await auth();
+//   const { userId } = await auth();
 
-  if (!userId) {
-    return NextResponse.json(
-      { success: false, error: "Not authenticated" },
-      {
-        status: 401,
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-        },
-      }
-    );
-  }
+//   if (!userId) {
+//     return NextResponse.json(
+//       { success: false, error: "Not authenticated" },
+//       {
+//         status: 401,
+//         headers: {
+//           "Access-Control-Allow-Origin": "*",
+//         },
+//       }
+//     );
+//   }
 
   try {
     const formData = await req.formData();
