@@ -59,7 +59,7 @@ const handleUpload = useCallback (async(files:FileList| File[])=>{
 
             const formData = new FormData();
 
-            formData.append("tax_certificate", file);
+            formData.append("file", file);
 
             // Call the server action to handle the upload
 

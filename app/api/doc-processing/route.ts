@@ -5,64 +5,24 @@ import Events from "@/constants/constants";
 import { NextResponse } from "next/server";
 import { getFileDownloadUrl } from "@/lib/actions/getFileDownloadUrl";
 import { auth } from "@clerk/nextjs/server";
-import { parsePDFTool } from "@/inngest/agents/docScanningAgent";
-import { parsePdf } from "@/lib/parsePdf";
-
-export async function OPTIONS() {
-  return new Response(null, {
-    status: 204,
-    headers: {
-      "Access-Control-Allow-Origin": "*", // Or set to specific origin
-      "Access-Control-Allow-Methods": "POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type, Authorization",
-    },
-  });
-}
 
 export async function POST(req: Request) {
-//   const { userId } = await auth();
+  const { userId } =  await auth();
 
-//   if (!userId) {
-//     return NextResponse.json(
-//       { success: false, error: "Not authenticated" },
-//       {
-//         status: 401,
-//         headers: {
-//           "Access-Control-Allow-Origin": "*",
-//         },
-//       }
-//     );
-//   }
+  if (!userId) {
+    return NextResponse.json({ success: false, error: "Not authenticated" }, { status: 401 });
+  }
 
   try {
     const formData = await req.formData();
-    const file = formData.get("tax_certificate") as File;
+    const file = formData.get("file") as File;
 
     if (!file) {
-      return NextResponse.json(
-        { success: false, error: "No file provided" },
-        {
-          status: 400,
-          headers: {
-            "Access-Control-Allow-Origin": "*",
-          },
-        }
-      );
+      return NextResponse.json({ success: false, error: "No file provided" }, { status: 400 });
     }
 
-    if (
-      !file.type.includes("pdf") &&
-      !file.name.toLowerCase().endsWith(".pdf")
-    ) {
-      return NextResponse.json(
-        { success: false, error: "Only PDF files allowed" },
-        {
-          status: 400,
-          headers: {
-            "Access-Control-Allow-Origin": "*",
-          },
-        }
-      );
+    if (!file.type.includes("pdf") && !file.name.toLowerCase().endsWith(".pdf")) {
+      return NextResponse.json({ success: false, error: "Only PDF files allowed" }, { status: 400 });
     }
 
     // Generate upload URL
@@ -83,38 +43,41 @@ export async function POST(req: Request) {
     }
 
     const { storageId } = await uploadResponse.json();
+
+    // Store metadata in Convex
+    const docId = await convex.mutation(api.docs.storeDoc, {
+      userId,
+      fileId: storageId,
+      fileName: file.name,
+      size: file.size,
+      mimeType: file.type,
+    });
+
     const fileUrl = await getFileDownloadUrl(storageId);
 
-    const data = await parsePdf({ pdfUrl: fileUrl.downloadUrl! });
-    console.log("PDF parse result:", data);
-
-    return NextResponse.json(
-      {
-        message:"Document processed successfully",
-        success: true,
-        data,
+    // Trigger Inngest event
+    const newData = await inngest.send({
+      name: Events.EXTRACT_DATA_AND_SAVE_TO_DB,
+      data: {
+        url: fileUrl.downloadUrl,
+        docId,
       },
-      {
-        status: 200,
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-        },
-      }
-    );
+    });
+
+    console.log("Inngest response:", newData);
+
+    return NextResponse.json({
+      success: true,
+      data: {
+        docId,
+        fileName: file.name,
+      },
+    });
   } catch (error) {
     console.error("Upload error:", error);
-
-    return NextResponse.json(
-      {
-        success: false,
-        error: error instanceof Error ? error.message : "Unknown error",
-      },
-      {
-        status: 500,
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-        },
-      }
-    );
+    return NextResponse.json({
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error",
+    }, { status: 500 });
   }
 }
