@@ -1,10 +1,11 @@
-// import PDFDropzone from "@/components/PDFDropzone";
 import PDFDropzone from "@/components/PDFDropzone";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, BarChart, Check, Search, Shield, Upload } from "lucide-react";
+import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
+import { ArrowRight , Check, Download, PhoneCall, Radar, RocketIcon, Search, Sparkles, Upload } from "lucide-react";
 import Link from "next/link";
 
-export default function Home() {
+export default async function Home() {
   return (
    <div className="flex flex-col min-h-screen">
       {/* Hero */}
@@ -12,7 +13,7 @@ export default function Home() {
         <div className="container px-4 md:px-6 mx-auto">
           <div className="flex flex-col items-center space-y-4 text-center">
           <div className="space-y-2">
-            <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl">
+            <h1 className="text-3xl font-sans font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl">
               Smart Company Verification
             </h1>
             <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
@@ -20,13 +21,32 @@ export default function Home() {
             </p>
           </div>
           <div className="space-x-4">
+             <SignedIn>
             <Link href="/docs">
-              <Button className="bg-blue-500 hover:bg-blue-700">Get Started <ArrowRight className="ml-2 h-4 w-4"/></Button>
+<Button className="bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-500 hover:from-purple-500 hover:via-pink-500 hover:to-red-500 text-white shadow-lg hover:shadow-xl hover:cursor-pointer transition duration-300 ease-in-out">
+  Try Now <ArrowRight className="ml-2 h-4 w-4"/>
+  </Button>
             </Link>
-            <Link href="#features">
-                <Button variant="outline">
-                  Learn more
-                </Button>
+</SignedIn>
+             <SignedOut>
+                <SignInButton mode="modal">
+<Button 
+className="bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-500 hover:from-purple-500 hover:via-pink-500 hover:to-red-500 text-white shadow-lg hover:shadow-xl hover:cursor-pointer transition duration-300 ease-in-out">
+                        Get Started Free<ArrowRight className="ml-2 h-4 w-4"/>
+                    </Button>
+                </SignInButton>
+            </SignedOut>
+            <Link href="https://documenter.getpostman.com/view/31082195/2sB2x6jqzA" target="_blank">
+            
+<Button
+  variant="outline"
+  className="hover:bg-gradient-to-r hover:from-gray-500 hover:via-gray-600 hover:to-gray-800 hover:text-white transition-colors duration-300 hover:border-transparent hover:cursor-pointer"
+>
+  API Docs
+</Button>
+
+
+
             </Link>
 
           </div>
@@ -78,10 +98,10 @@ export default function Home() {
 
                <div className="flex flex-col items-center space-y-2 border border-gray-200 rounded-lg p-6 dark:border-gray-800">
                 <div className="p-3 rounded-full bg-purple-100 dark:bg-purple-900">
-                  <BarChart className="h-6 w-6 text-purple-500 dark:text-purple-400"/>
+                  <RocketIcon className="h-6 w-6 text-purple-500 dark:text-purple-400"/>
                 </div>
-                <h3 className="text-xl font-bold">Easy Uploads</h3>
-                <p className="text-gray-500 dark:text-gray-400 text-center">Drag and drop PDF for instant scanning and processing</p>
+                <h3 className="text-xl font-bold">Lightning Fast</h3>
+                <p className="text-gray-500 dark:text-gray-400 text-center">Key values and details extracted within seconds</p>
               </div>
             </div>
             
@@ -106,18 +126,18 @@ export default function Home() {
             {/* Free Tier */}
             <div className="flex flex-col p-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:border-gray-800 dark:bg-gray-950">
               <div className="space-y-2 ">
-                <h3 className="text-2xl font-bold">Free</h3>
-                <p className="text-gray-500 dark:text-gray-400">Free tier for all to try</p>
+                <h3 className="text-2xl font-bold">Basic</h3>
+                <p className="text-gray-500 dark:text-gray-400">Test now for free!</p>
               </div>
-              <div className="mt-4">
+              <div className="mt-4 flex">
                 <p className="text-4xl font-bold">$0.00</p>
-                <p className="text-gray-500 dark:text-gray-400">/month</p>
+                <p className="text-gray-500 dark:text-gray-400 m-1"><Badge  variant={"outline"}>month</Badge></p>
 
               </div>
               <ul className="mt-6 space-y-2 flex-1">
                 <li className="flex items-center">
                   <Check className="text-green-500 h-5 w-5 mr-2"/>
-                  <span>20 Scans per month </span>
+                  <span>5 Scans per month </span>
                 </li>
                 <li className="flex items-center">
                   <Check className="text-green-500 h-5 w-5 mr-2"/>
@@ -129,70 +149,35 @@ export default function Home() {
                 </li>
 
               </ul>
-              <div className="mt-6">
+              <div className="mt-3">
                 <Link href="/manage-plan">
-                <Button className="w-full" variant="outline">
+                <Button 
+                
+  className="w-full hover:bg-gradient-to-r hover:from-gray-500 hover:via-gray-600 hover:to-gray-800 hover:text-white transition-colors duration-300 hover:border-transparent hover:cursor-pointer"
+                
+                variant="outline">
                   Sign Up Free
                 </Button>
                 </Link>
               </div>
 
             </div>
-             {/* Starter Tier */}
-             <div className="flex flex-col p-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:border-gray-800 dark:bg-gray-950">
-              <div className="space-y-2 ">
-                <h3 className="text-2xl font-bold">Starter</h3>
-                <p className="text-gray-500 dark:text-gray-400">A taste of the premium</p>
-              </div>
-              <div className="mt-4">
-                <p className="text-4xl font-bold">$4.99</p>
-                <p className="text-gray-500 dark:text-gray-400">/month</p>
-
-              </div>
-              <ul className="mt-6 space-y-2 flex-1">
-                <li className="flex items-center">
-                  <Check className="text-green-500 h-5 w-5 mr-2"/>
-                  <span>100 Scans per month </span>
-                </li>
-                <li className="flex items-center">
-                  <Check className="text-green-500 h-5 w-5 mr-2"/>
-                  <span>Enhanced data extraction </span>
-                </li>
-                <li className="flex items-center">
-                  <Check className="text-green-500 h-5 w-5 mr-2"/>
-                  <span>30 day history </span>
-                </li>
-                <li className="flex items-center">
-                  <Check className="text-green-500 h-5 w-5 mr-2"/>
-                  <span>Basic export options </span>
-                </li>
-
-              </ul>
-              <div className="mt-6">
-                <Link href="/manage-plan">
-                <Button className="w-full" variant="outline">
-                  Choose plan
-                </Button>
-                </Link>
-              </div>
-
-            </div>
-               {/* Pro Tier */}
+            {/* Pro Tier */}
                <div className="flex flex-col p-6 bg-blue-50 border border-blue-200 rounded-lg shadow-sm relative dark:border-blue-800 dark:bg-blue-900/20">
                 <div className="absolute -top-3 right-4 bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-medium">Popular</div>
               <div className="space-y-2 ">
-                <h3 className="text-2xl font-bold">Pro</h3>
+                <h3 className="text-2xl font-bold">Business</h3>
                 <p className="text-gray-500 dark:text-gray-400">Full access to premium features</p>
               </div>
-              <div className="mt-4">
-                <p className="text-4xl font-bold">$9.99</p>
-                <p className="text-gray-500 dark:text-gray-400">/month</p>
+              <div className="mt-4 flex">
+                <p className="text-4xl font-bold">$60.00</p>
+                <p className="text-gray-500 dark:text-gray-400 m-1"><Badge  variant={"outline"}>month</Badge></p>
 
               </div>
               <ul className="mt-6 space-y-2 flex-1">
                 <li className="flex items-center">
                   <Check className="text-green-500 h-5 w-5 mr-2"/>
-                  <span>500 Scans per month </span>
+                  <span>Up to 100 Scans per month </span>
                 </li>
                 <li className="flex items-center">
                   <Check className="text-green-500 h-5 w-5 mr-2"/>
@@ -203,28 +188,63 @@ export default function Home() {
                   <span>Unlimited history </span>
                 </li>
                 <li className="flex items-center">
-                  <Check className="text-green-500 h-5 w-5 mr-2"/>
+                  <Download className="text-green-500 h-5 w-5 mr-2"/>
                   <span>Enhanced export options </span>
                 </li>
                 <li className="flex items-center">
-                  <Check className="text-green-500 h-5 w-5 mr-2"/>
+                  <Sparkles className="text-blue-500 h-5 w-5 mr-2"/>
                   <span>AI Summaries </span>
                 </li>
-                <li className="flex items-center">
-                  <Check className="text-green-500 h-5 w-5 mr-2"/>
-                  <span>Categories and tags </span>
-                </li>
+               
 
               </ul>
               <div className="mt-6">
                 <Link href="/manage-plan">
-                <Button className="w-full" variant="outline">
+                <Button 
+  className="w-full hover:bg-gradient-to-r hover:from-gray-500 hover:via-gray-600 hover:to-gray-800 hover:text-white transition-colors duration-300 hover:border-transparent hover:cursor-pointer"
+                variant="outline">
                   Choose plan
                 </Button>
                 </Link>
               </div>
 
             </div>
+             {/* Starter Tier */}
+             <div className="flex flex-col p-6 bg-orange-200 border border-gray-200 rounded-lg shadow-sm dark:border-gray-800 dark:bg-gray-950">
+              <div className="space-y-2 ">
+                <h3 className="text-2xl font-bold">Enterprice</h3>
+                <p className="text-gray-500 dark:text-gray-400">All premium features and more!</p>
+              </div>
+              <div className="mt-8">
+                <p className="text-4xl font-bold">Custom</p>
+
+              </div>
+              <ul className="mt-6 space-y-2 flex-1">
+                <li className="flex items-center">
+                  <Check className="text-green-500 h-5 w-5 mr-2"/>
+                  <span>100+ Scans per month </span>
+                </li>
+               
+                <li className="flex items-center">
+                  <Sparkles className="text-orange-500 h-5 w-5 mr-2"/>
+                  <span >Advanced AI Summaries </span>
+                </li>
+               
+
+              </ul>
+              <div className="mt-6">
+                <Link href="/manage-plan">
+                <Button 
+  className="w-full hover:bg-gradient-to-r hover:from-gray-500 hover:via-gray-600 hover:to-gray-800 hover:text-white transition-colors duration-300 hover:border-transparent hover:cursor-pointer"
+                variant="outline">
+                  <PhoneCall/>
+                 Book a call today
+                </Button>
+                </Link>
+              </div>
+
+            </div>
+               
 
           </div>
         </div>
@@ -232,15 +252,15 @@ export default function Home() {
       </section>
 
       {/* Info */}
-      <section className="py-16 md:py-24">
+      <section className="py-8 md:py-12">
         <div className="container px-4 md:px-6 mx-auto">
           <div className="text-center max-w-3xl mx-auto space-y-4">
             <div className="space-y-2 "> 
               <h2 className="text-3xl font-bold tracking-tighter md:text-4xl">
-                Start Scanning today
+                Start Scanning today!
               </h2>
 
-              <p>Join over 10,000+ users and save time amd money </p>
+              <p>Trusted by 100+ of users </p>
             </div>
 
           </div>
@@ -254,12 +274,12 @@ export default function Home() {
       <div className="container px-4 md:px-6 py-8 mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="flex items-center space-x-1">
-            <Shield className="h-6 w-6 text-blue-600"/>
-            <span>FiscalEye 🔍</span>
+            <Radar className="h-6 w-6 text-blue-600"/>
+            <span>FiscalLens 🔍</span>
 
           </div>
           <div className="mt-4 md:mt-0">
-            <p className="text-sm text-gray-500 dark:text-gray-400">THe smater way managing documents</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">The smarter way of managing documents &copy; Five</p>
           </div>
 
         </div>
