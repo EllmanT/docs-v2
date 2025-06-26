@@ -66,6 +66,11 @@ export async function POST(req: Request) {
 
     console.log("Inngest response:", newData);
 
+    if(!newData){
+      return NextResponse.json({success:false, 
+        error:"Inngest error"
+      },{status:500})
+    }
     return NextResponse.json({
       success: true,
       data: {
@@ -78,6 +83,6 @@ export async function POST(req: Request) {
     return NextResponse.json({
       success: false,
       error: error instanceof Error ? error.message : "Unknown error",
-    }, { status: 500 });
+    }, { status: 400 });
   }
 }

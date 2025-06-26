@@ -155,6 +155,30 @@ export const deleteDoc= mutation({
     }
 })
 
+export const deleteDocRecord= mutation({
+    args:{
+        id:v.id("docs")
+    },
+    handler: async(ctx, args)=>{
+          // Verify the user has access to the doc
+          const doc = await ctx.db.get(args.id);
+          if(!doc){
+              throw new Error("Doc not found");
+          }
+      
+          //Delelte the file from the storage
+
+          await ctx.storage.delete(doc.fileId);
+
+        //   Dleete from record
+        await ctx.db.delete(args.id)
+
+        return {
+            message:"Invalid Document! Upload a valid VAT Ceritificate"
+        }
+    }
+})
+
 // Update doc with the extracted info
 
 export const updateDocWithExtractedData = mutation({

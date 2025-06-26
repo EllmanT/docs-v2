@@ -81,17 +81,11 @@ export async function uploadPDF(formData:FormData){
                 }
             })
 
-            
-            
-            console.log("data", newData)
-            return {
-                success:true,
-                data:{
-                    docId,
-                    fileName:file.name
-                }
+            if(!newData) 
+                return {
+                success:false,
+                error:"Inngest Error"
             }
-
 
     } catch (error) {
         console.log("Server action upload error:", error)

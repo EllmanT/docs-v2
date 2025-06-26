@@ -8,7 +8,7 @@ import convex from "@/lib/convexClient";
 
 export const parsePDFTool = createTool({
   name: "parse-pdf",
-  description: "Analyse the given PDF",
+  description: "Analyse the given vat certificate PDF. ",
   parameters: z.object({
     pdfUrl: z.string(),
     fileDisplayName: z
@@ -53,7 +53,12 @@ export const parsePDFTool = createTool({
                 },
                 {
                   type: "text",
-                  text: `Extract the data from the VAT certificate and return the structured output as follows:
+                  text: `
+                  
+                 
+  Make sure the document is called VAT REGISTRATION CERTIFICATE or VAT CERTIFICATE or any variation. 
+  Ensure that the document is not an invoice, receipt, or credit note. If document is not specifically a vat certificate terminate the process immediately and return an error message that says it is not a vat certificate.
+ If the document is a vat certificate then Extract the data from the VAT certificate and return the structured output as follows:
 {
   "taxPayerName": "Tax Payer Name",
   "tradeName": "Trade Name",
@@ -123,7 +128,15 @@ export const parsePDFTool = createTool({
             console.error("Error parsing JSON:", err);
           }
         } else {
-          console.error("No JSON found in the text.");
+         await context.network?.state.kv.set("wrong-doc-type", true);
+
+         const cleanUp=await convex.mutation(api.docs.deleteDocRecord,{
+            id:docId as Id<"docs">
+
+        })
+          console.error("Invalid docment type.");
+
+        return {cleanUp}
         }
       } else {
         console.error("No text block found.");
@@ -138,8 +151,10 @@ export const parsePDFTool = createTool({
 export const docScanningAgent = createAgent({
   name: "Doc Scanning Agent",
   description:
-    "Processes VAT certificate PDFs to extract key info: Trade name, Tax Payer Name, TIN Number, VAT Number",
+    "Processes VAT certificate PDFs to extract key info: Trade name, Tax Payer Name, TIN Number, VAT Number.   Make sure the document is called VAT REGISTRATION CERTIFICATE or VAT CERTIFICATE or any variation. else terminate the process",
   system: `You are an AI-powered VAT certificate scanning assistant.
+  Make sure the document is called VAT REGISTRATION CERTIFICATE or VAT CERTIFICATE or any variation. 
+  Ensure that the document is not an invoice, receipt, or credit note. If document is not specifically a vat certificate terminate the process immediately and return an error message that says it is not a vat certificate.
 Your job is to extract and structure the following:
 - Tax Payer Name: The name under 'Taxpayer Name'
 - Trade Name: The name under 'Trade Name'

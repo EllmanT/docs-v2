@@ -14,7 +14,8 @@ const agentNetwork = createNetwork({
    
     defaultRouter:({network})=>{
         const savedToDatabase = network.state.kv.get("save-to-database");
-         if(savedToDatabase !==undefined){
+        const wrongDocType = network.state.kv.get("wrong-doc-type");
+         if(savedToDatabase !==undefined || wrongDocType){
             // Terminate the agent process if the data has been saved to the database
 
             return undefined;
@@ -35,7 +36,9 @@ export const extractAndSavePDF = inngest.createFunction(
 
     async({event})=>{
         const result = await agentNetwork.run(
-            `Extract the key data from this pdf: ${event.data.url}, Once the data is extracted , save it to the database using the docId: ${event.data.docId}.
+            `Make sure the document is called VAT REGISTRATION CERTIFICATE or VAT CERTIFICATE or any variation. 
+            Ensure that the document is not an invoice, receipt, or credit note. If document is not specifically a vat certificate terminate the process immediately and return an error message that says it is not a vat certificate.
+            Extract the key data from this vat certificate pdf: ${event.data.url}, Once the data is extracted , save it to the database using the docId: ${event.data.docId}.
              Once the document is successflly saved to the database you can terminate the agent process.`
         )
         return result.state.kv.get("doc")
