@@ -199,6 +199,8 @@ className="bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-500 hover:fro
 
               </ul>
               <div className="mt-6">
+                             <SignedIn>
+
                 <Link href="/manage-plan">
                 <Button 
   className="w-full hover:bg-gradient-to-r hover:from-gray-500 hover:via-gray-600 hover:to-gray-800 hover:text-white transition-colors duration-300 hover:border-transparent hover:cursor-pointer"
@@ -206,6 +208,16 @@ className="bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-500 hover:fro
                   Choose plan
                 </Button>
                 </Link>
+                </SignedIn>
+                 <SignedOut>
+                <SignInButton mode="modal">
+<Button 
+  className="w-full hover:bg-gradient-to-r hover:from-gray-500 hover:via-gray-600 hover:to-gray-800 hover:text-white transition-colors duration-300 hover:border-transparent hover:cursor-pointer"
+>
+                        Choose plan<ArrowRight className="ml-2 h-4 w-4"/>
+                    </Button>
+                </SignInButton>
+            </SignedOut>
               </div>
 
             </div>
@@ -233,12 +245,12 @@ className="bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-500 hover:fro
 
               </ul>
               <div className="mt-6">
-                <Link href="/manage-plan">
+                <Link href="#contact" scroll={true}>
                 <Button 
   className="w-full hover:bg-gradient-to-r hover:from-gray-500 hover:via-gray-600 hover:to-gray-800 hover:text-white transition-colors duration-300 hover:border-transparent hover:cursor-pointer"
                 variant="outline">
                   <PhoneCall/>
-                 Book a call today
+                 Call us Today! 
                 </Button>
                 </Link>
               </div>
@@ -252,7 +264,7 @@ className="bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-500 hover:fro
       </section>
 
       {/* Info */}
-      <section className="py-8 md:py-12">
+      <section  className="py-8 md:py-12">
         <div className="container px-4 md:px-6 mx-auto">
           <div className="text-center max-w-3xl mx-auto space-y-4">
             <div className="space-y-2 "> 
@@ -270,19 +282,19 @@ className="bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-500 hover:fro
       </section>
 
       {/* Footer */}
-     <footer className="border-t border-gray-200 dark:border-gray-800">
+     <footer id="contact" className="border-t border-gray-200 dark:border-gray-800">
       <div className="container px-4 md:px-6 py-8 mx-auto">
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          <div className="flex items-center space-x-1">
-            <Radar className="h-6 w-6 text-blue-600"/>
-            <span>FiscalLens 🔍</span>
-
-          </div>
-          <div className="mt-4 md:mt-0">
-            <p className="text-sm text-gray-500 dark:text-gray-400">The smarter way of managing documents &copy; Five</p>
-          </div>
-
-        </div>
+       <div className="flex flex-col md:flex-row justify-between items-center">
+  <div className="flex items-center space-x-1">
+    <Radar className="h-6 w-6 text-blue-600 animate-pulse" />
+    <span>FiscalLens &copy;</span>
+  </div>
+  <div className="mt-4 md:mt-0">
+    <p className="text-sm text-gray-500 dark:text-gray-400">
+      📞 +263 778 115 084 &nbsp;|&nbsp; 📧 tmuranda1@gmail.com
+    </p>
+  </div>
+</div>
 
       </div>
 
