@@ -1,6 +1,6 @@
 "use client"
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs'
-import { RadarIcon } from 'lucide-react'
+import { RadarIcon, Scan, ScanEyeIcon, ScanSearch, ScanText } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 import { usePathname } from 'next/navigation'
@@ -13,9 +13,9 @@ function Header() {
     <div className={`p-4 flex justify-between items-center ${isHomePage ?"bg-blue-50":"bg-white border-b border-blue-50"}`}>
         <Link href="/" className='flex items-center'>
         <RadarIcon
-        className='w-6 h-6 text-blue-500 mr-2 '
+        className='w-6 h-6  mr-2 animate-pulse'
         />
-        <h1 className='text-xl font-semibold'>FiscalLens 🔍</h1>
+        <h1 className='text-xl font-semibold'>FiscalLens </h1>
         </Link>
         <div className='flex items-center space-x-4'>
             <SignedIn>

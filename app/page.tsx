@@ -14,10 +14,10 @@ export default async function Home() {
           <div className="flex flex-col items-center space-y-4 text-center">
           <div className="space-y-2">
             <h1 className="text-3xl font-sans font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl">
-              Smart Company Verification
+              Smart AI Verification
             </h1>
             <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
-              Scan, analyze and organize your documents with AI. Save time and gain insights from your files.
+“Save money now — let AI scan, analyse and extract data from your documents in seconds ⚡ &quot;
             </p>
           </div>
           <div className="space-x-4">
@@ -53,7 +53,7 @@ className="bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-500 hover:fro
         </div>
         </div>
         {/* PDF dropzone */}
-        <div className="mt-12 flex justify-center">
+        <div className="mt-6 flex justify-center">
           <div className="relative w-full max-w-3xl rounded-lg border border-gray-200 bg-white shadow-lg overflow-hidden dark:border-gray-800 dark:bg-gray-950 ">
             <div className="p-6 md:p-8 relative">
                 <PDFDropzone/>
