@@ -137,7 +137,7 @@ className="bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-500 hover:fro
               <ul className="mt-6 space-y-2 flex-1">
                 <li className="flex items-center">
                   <Check className="text-green-500 h-5 w-5 mr-2"/>
-                  <span>5 Scans per month </span>
+                  <span>20 Scans per month </span>
                 </li>
                 <li className="flex items-center">
                   <Check className="text-green-500 h-5 w-5 mr-2"/>
