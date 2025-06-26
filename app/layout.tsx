@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Fiscal Lens",
-  description: "Scan ,analyse, company documents using latest AI Technologies ",
+  description: "Scan ,analyse, company documents using latest AI Technologies. ",
   icons: {
     icon: "/convex.svg",
   },
