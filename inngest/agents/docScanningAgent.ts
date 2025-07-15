@@ -34,7 +34,7 @@ export const parsePDFTool = createTool({
     try {
       const result1 = await step?.ai.infer("parse-pdf", {
         model: anthropic({
-          model: "claude-3-5-sonnet-20241022",
+          model: "claude-3-7-sonnet-latest",
           defaultParameters: {
             max_tokens: 3094,
           },
